@@ -1,5 +1,5 @@
 
-const DOCX_SERVER = fetch("/generate-docx")
+const DOCX_SERVER = "/generate-docx";
 let state = {
   scenario: null, hasTTA: null, needsSetRuang: false,
   currentStep: 1, aiSubject: '', aiContext: '',
