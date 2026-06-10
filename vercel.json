@@ -17,5 +17,15 @@
       "src": "*.js",
       "use": "@vercel/static"
     }
+  ],
+  "routes": [
+    {
+      "src": "/generate-docx",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }
