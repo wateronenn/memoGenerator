@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memorandum Generator</title>
+<link rel="stylesheet" href="memo.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-badge">Memo Generator</div>
+    <h1>Memorandum Generator</h1>
+    <p class="header-sub">สร้างหนังสือขออนุมัติอย่างเป็นทางการด้วย AI</p>
+  </div>
+
+  <div class="steps-bar">
+    <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">ประเภท</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="step2"><div class="step-num">2</div><div class="step-label">ข้อมูล</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="step3"><div class="step-num">3</div><div class="step-label">AI Draft</div></div>
+    <div class="step-line"></div>
+    <div class="step" id="step4"><div class="step-num">4</div><div class="step-label">ดาวน์โหลด</div></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="section active" id="sec1">
+    <div class="card">
+      <div class="card-title">เลือกประเภท Memorandum</div>
+      <div class="scenario-grid">
+        <div class="scenario-card" data-num="01" onclick="selectScenario('new_store')" id="sc_new_store">
+          <div class="scenario-icon">🏪</div>
+          <div class="scenario-name">New Stores Opening</div>
+          <div class="scenario-desc">การเปิดสาขาใหม่</div>
+        </div>
+        <div class="scenario-card" data-num="02" onclick="selectScenario('renovation')" id="sc_renovation">
+          <div class="scenario-icon">🔧</div>
+          <div class="scenario-name">Stores Renovation</div>
+          <div class="scenario-desc">การปรับปรุงร้าน</div>
+        </div>
+        <div class="scenario-card" data-num="03" onclick="selectScenario('listing_fee')" id="sc_listing_fee">
+          <div class="scenario-icon">📋</div>
+          <div class="scenario-name">Listing Fee (NPD)</div>
+          <div class="scenario-desc">ค่าธรรมเนียมการลงทะเบียน</div>
+        </div>
+        <div class="scenario-card" data-num="04" onclick="selectScenario('display_rent')" id="sc_display_rent">
+          <div class="scenario-icon">🖥️</div>
+          <div class="scenario-name">Display ค่าเช่าพื้นที่</div>
+          <div class="scenario-desc">ค่าเช่าพื้นที่วางสินค้า</div>
+        </div>
+        <div class="scenario-card" data-num="05" onclick="selectScenario('other_support')" id="sc_other_support">
+          <div class="scenario-icon">💡</div>
+          <div class="scenario-name">Other Support</div>
+          <div class="scenario-desc">การสนับสนุนอื่นๆ</div>
+        </div>
+      </div>
+
+      <div id="tta_section" style="display:none; margin-top: 24px;">
+        <div class="divider" style="margin-top:0"></div>
+        <div class="card-title" style="margin-bottom:12px;">มี TTAs หรือไม่?</div>
+        <div class="tta-row">
+          <div class="tta-btn" onclick="setTTA(true)" id="tta_yes">✅ มี TTAs</div>
+          <div class="tta-btn" onclick="setTTA(false)" id="tta_no">❌ ไม่มี TTAs</div>
+        </div>
+        <div id="tta_notice" style="display:none;"></div>
+      </div>
+    </div>
+    <div class="action-row" style="justify-content: flex-end;">
+      <button class="btn btn-primary" onclick="goStep(2)" id="btn_next1" disabled>ถัดไป →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section" id="sec2">
+    <div class="card">
+      <div class="card-title">ข้อมูลหนังสือ (Header)</div>
+      <div class="form-grid">
+        <div class="field"><label>วันที่ <span class="required-dot">*</span></label><input type="date" id="f_date" /></div>
+        <div class="field"><label>Sales Deal No.</label><input type="text" id="f_deal_no" placeholder="เช่น SD-2026-001" /></div>
+        <div class="field"><label>Attention (เรียน) <span class="required-dot">*</span></label><input type="text" id="f_attention" value="Jane Doe" /></div>
+        <div class="field"><label>CC</label><input type="text" id="f_cc" value="John Smith" /></div>
+        <div class="field"><label>Request From <span class="required-dot">*</span></label><input type="text" id="f_from" value="Mr.ABC" /></div>
+        <div class="field"><label>Channel / Company</label><input type="text" id="f_channel" value="Company A" /></div>
+        <div class="field"><label>GL No.</label><input type="text" id="f_gl" placeholder="GL Number" /></div>
+        <div class="field"><label>Budget (Amount รวม)</label><input type="text" id="f_budget" placeholder="เช่น 500,000 บาท" /></div>
+      </div>
+    </div>
+    <div class="card" id="memo_fields_card">
+      <div class="card-title" id="memo_fields_title">ข้อมูล Memo</div>
+      <div id="memo_fields"></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-secondary" onclick="goStep(1)">← ย้อนกลับ</button>
+      <button class="btn btn-primary" onclick="goStep(3)">สร้าง AI Draft →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section" id="sec3">
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-badge"><div class="ai-badge-dot"></div>AI Generated</div>
+        <div class="ai-title">เนื้อหาที่ AI สร้างขึ้น</div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="margin-bottom:8px;display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;">SUBJECT</label>
+        <div class="ai-content" id="ai_subject">กำลังรอ...</div>
+      </div>
+      <div>
+        <label style="margin-bottom:8px;display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;">CONTEXT</label>
+        <div class="ai-content" id="ai_context">กำลังรอ...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">แก้ไขข้อความ (ถ้าต้องการ)</div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>Subject</label>
+        <input type="text" id="edit_subject" placeholder="หัวข้อ memo" />
+      </div>
+      <div class="field">
+        <label>Context</label>
+        <textarea id="edit_context" rows="6" placeholder="เนื้อหาหลักของ memo"></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ตัวอย่าง Memo</div>
+      <div class="preview-box" id="preview_box">กำลังโหลด...</div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-secondary" onclick="goStep(2)">← ย้อนกลับ</button>
+      <button class="btn btn-outline" onclick="generateAI()">🔄 สร้างใหม่</button>
+      <button class="btn btn-primary" onclick="goStep(4)">ดาวน์โหลด →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="section" id="sec4">
+    <div class="download-section">
+      <div class="download-icon">📄</div>
+      <div class="download-title">Memo พร้อมดาวน์โหลด</div>
+      <div class="download-sub" id="dl_summary">เลือกรูปแบบที่ต้องการ</div>
+      <div class="download-btns">
+        <button class="btn btn-primary" onclick="downloadDocx()" id="btn_docx">📝 ดาวน์โหลด .docx</button>
+        <button class="btn btn-success" onclick="downloadPDF()" id="btn_pdf">📕 ดาวน์โหลด PDF</button>
+      </div>
+      <div id="dl_error" class="error-box"></div>
+      <div style="margin-top:24px;">
+        <button class="btn btn-secondary" onclick="resetAll()" style="margin-right:8px;">+ สร้าง Memo ใหม่</button>
+        <button class="btn btn-secondary" onclick="goStep(3)">← แก้ไข</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="memo_controller.js"></script>
+</body></html>
