@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, BorderStyle, WidthType, VerticalAlign, ShadingType,
@@ -9,6 +10,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'memo_generator.html'));
+});
 
 app.post('/generate-docx', async (req, res) => {
   try {
