@@ -257,7 +257,7 @@ async function downloadDocx() {
 
   try {
     const data = collectData();
-    const res = await fetch(`${DOCX_SERVER}/generate-docx`, {
+    const res = await fetch(`${DOCX_SERVER}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data, subject: state.aiSubject, context: state.aiContext }),
@@ -275,7 +275,7 @@ async function downloadDocx() {
     URL.revokeObjectURL(url);
   } catch(e) {
     errBox.style.display = 'block';
-    errBox.textContent = '❌ ไม่สามารถสร้าง DOCX ได้: ' + e.message + ' — กรุณาตรวจสอบว่า server กำลังทำงานอยู่ที่ localhost:3456';
+    errBox.textContent = '❌ ไม่สามารถสร้าง DOCX ได้: ' + e.message + `กรุณาตรวจสอบว่า server กำลังทำงานอยู่ที่ ${DOCX_SERVER}`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = '📝 ดาวน์โหลด .docx';
