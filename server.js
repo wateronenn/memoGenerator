@@ -1,15 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, BorderStyle, WidthType, VerticalAlign, ShadingType,
 } = require('docx');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-app.use(express.static('/mnt/user-data/outputs'));
 
 app.post('/generate-docx', async (req, res) => {
   try {
@@ -117,16 +116,29 @@ app.post('/generate-docx', async (req, res) => {
       }],
     });
 
+    
     const buffer = await Packer.toBuffer(doc);
-    const filename = `Memorandum_${(data.scenarioName || 'memo').replace(/\s+/g, '_')}_${Date.now()}.docx`;
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.send(buffer);
+
+    const filename =
+      `Memorandum_${(data.scenarioName || 'memo').replace(/\s+/g, '_')}_${Date.now()}.docx`;
+
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    );
+
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${filename}"`
+    );
+
+    return res.send(buffer);
+
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
-const PORT = 3456;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+module.exports = app;
+

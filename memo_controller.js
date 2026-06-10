@@ -1,17 +1,16 @@
 
-const DOCX_SERVER = 'http://localhost:3456';
-
+const DOCX_SERVER = fetch("/generate-docx")
 let state = {
   scenario: null, hasTTA: null, needsSetRuang: false,
   currentStep: 1, aiSubject: '', aiContext: '',
 };
-
+ 
 const scenarioNames = {
   new_store: 'New Stores Opening', renovation: 'Stores Renovation',
   listing_fee: 'Listing Fee (NPD)', display_rent: 'Display ค่าเช่าพื้นที่',
   other_support: 'Other Support',
 };
-
+ 
 const scenarioFields = {
   new_store:     ['qty_amt','model_categories','period','amount_branch'],
   renovation:    ['qty_amt','model_categories','period','amount_branch'],
@@ -19,14 +18,14 @@ const scenarioFields = {
   display_rent:  ['period','amount_branch'],
   other_support: ['qty_amt','model_categories','period'],
 };
-
+ 
 const fieldDefs = {
   qty_amt:          { label: 'จำนวน / มูลค่า (Qty/Amt)',         placeholder: 'เช่น 100 ชิ้น / 500,000 บาท' },
   model_categories: { label: 'รุ่น / หมวดหมู่ (Model/Categories)', placeholder: 'เช่น iPhone 16 Pro, Accessories' },
   period:           { label: 'ระยะเวลา (Period)',                  placeholder: 'เช่น Q3 2026 / ม.ค. - มิ.ย. 2026' },
   amount_branch:    { label: 'จำนวน / สาขา (Amount/Branch)',       placeholder: 'เช่น 50,000 บาท/สาขา' },
 };
-
+ 
 function goStep(n) {
   if (n === 2 && !state.scenario) return;
   if (n === 3) { generateAI(); }
@@ -40,7 +39,7 @@ function goStep(n) {
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
+ 
 function resetAll() {
   state = { scenario: null, hasTTA: null, needsSetRuang: false, currentStep: 1, aiSubject: '', aiContext: '' };
   document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
@@ -48,7 +47,7 @@ function resetAll() {
   document.getElementById('btn_next1').disabled = true;
   goStep(1);
 }
-
+ 
 function selectScenario(sc) {
   state.scenario = sc; state.hasTTA = null;
   document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
@@ -64,9 +63,10 @@ function selectScenario(sc) {
   } else {
     document.getElementById('btn_next1').disabled = true;
   }
+  toggleDealNoField();
   renderMemoFields();
 }
-
+ 
 function setTTA(hasTTA) {
   state.hasTTA = hasTTA;
   state.needsSetRuang = !hasTTA || state.scenario === 'other_support';
@@ -82,8 +82,17 @@ function setTTA(hasTTA) {
     notice.textContent = '⚠ ต้องตั้งเรื่อง (ตั้งเรื่อง required) ก่อนดำเนินการ';
   }
   document.getElementById('btn_next1').disabled = false;
+  toggleDealNoField();
 }
-
+ 
+function toggleDealNoField() {
+  const showField = state.hasTTA === false || state.scenario === 'other_support';
+  const dealField = document.getElementById('f_deal_no')?.closest('.field');
+  if (!dealField) return;
+  dealField.style.display = showField ? '' : 'none';
+  if (!showField) document.getElementById('f_deal_no').value = '';
+}
+ 
 function renderMemoFields() {
   const sc = state.scenario; if (!sc) return;
   const fields = scenarioFields[sc] || [];
@@ -96,7 +105,7 @@ function renderMemoFields() {
   html += '</div>';
   document.getElementById('memo_fields').innerHTML = html;
 }
-
+ 
 function collectData() {
   const sc = state.scenario;
   const fields = scenarioFields[sc] || [];
@@ -116,7 +125,7 @@ function collectData() {
     memo,
   };
 }
-
+ 
 async function generateAI() {
   const data = collectData();
   const subjectEl = document.getElementById('ai_subject');
