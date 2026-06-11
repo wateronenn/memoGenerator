@@ -5,8 +5,8 @@
       "src": "server.js",
       "use": "@vercel/node"
     },
-    {
-      "src": "/assets/(.*)",
+     {
+      "src": "assets/**/*",
       "use": "@vercel/static"
     },
     {
