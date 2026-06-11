@@ -7,7 +7,7 @@ This Memorandum Generator Web App is a demonstration prototype intended for futu
 ## Deployment
 
 **Vercel:**
-`https://memo-generator-sigma.vercel.app/memo_generator.html`
+https://memo-generator-sigma.vercel.app/memo_generator.html
 
 ## Running Locally
 
