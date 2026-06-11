@@ -449,7 +449,7 @@ function downloadPDF() {
   } else {
     supportingDocs += `
 
-      <img class="full-a4"src="/assets/acknowledgement.jpg">
+      <img class="full-a4" src="/assets/acknowledgement.jpg">
 
     `;
   }
