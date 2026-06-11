@@ -16,11 +16,21 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+
+@page {
+    size: 7in 9.25in;
+    margin: 27mm 16mm 27mm 16mm;
+}
+
+
+  html,
   body {
     font-family: 'IBM Plex Sans Thai', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
+    margin: 0;
+  padding: 0;
   }
 
   body::before {
@@ -319,3 +329,24 @@
     font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.06em; margin-bottom: 2px;
   }
   .doc-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .image-page{
+    width:210mm;
+    height:297mm;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    page-break-after:always;
+  }
+  .image-page img{
+    width:210mm;
+    height:297mm;
+    object-fit:contain;
+  }
+
+  .full-a4{
+    display:block;
+    width:210mm;
+    height:297mm;
+    page-break-after:always;
+    object-fit:contain;
+  }

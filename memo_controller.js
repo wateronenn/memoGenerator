@@ -251,6 +251,8 @@ function buildRelatedDocs() {
     html += `<div class="doc-grid">${invoiceCard(1)}${branchCard(2)}${last}</div>`;
   }
 
+  
+
   container.innerHTML = html;
 }
 
@@ -412,12 +414,45 @@ async function downloadDocx() {
 // ── PDF download ──────────────────────────────────────
 function downloadPDF() {
   syncEdited();
+
   const data = collectData();
   const subject = state.aiSubject;
   const context = state.aiContext;
+
   const dateStr = data.date
-    ? new Date(data.date + 'T12:00:00').toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })
-    : new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+    ? new Date(data.date + 'T12:00:00').toLocaleDateString(
+        'th-TH',
+        { year: 'numeric', month: 'long', day: 'numeric' }
+      )
+    : new Date().toLocaleDateString(
+        'th-TH',
+        { year: 'numeric', month: 'long', day: 'numeric' }
+      );
+
+  let supportingDocs = `
+
+      <img class="full-a4" src="${window.location.origin}/assets/Invoice.jpg">
+  `;
+
+  if (state.scenario !== 'other_support') {
+    supportingDocs += `
+      <img class="full-a4" src="${window.location.origin}/assets/branchDetail.jpg">
+    `;
+  }
+
+  if (state.hasTTA) {
+    supportingDocs += `
+
+      <img class="full-a4" src="${window.location.origin}/assets/TTA.jpg">
+
+    `;
+  } else {
+    supportingDocs += `
+
+      <img class="full-a4"src="${window.location.origin}/assets/acknowledgement.jpg">
+
+    `;
+  }
 
   const win = window.open('', '_blank');
   win.document.write(`<!DOCTYPE html>
@@ -434,11 +469,33 @@ td{border:1px solid #aaa;padding:5px 10px;vertical-align:top}
 td.lbl{font-weight:700;background:#eef1ff;white-space:nowrap;}
 .ctx{font-weight:700;margin-bottom:24px;white-space:pre-wrap;text-align:justify}
 .sig-line{display:block;width:180px;margin:0 auto 4px;border-bottom:1px solid #333;}
-@media print{
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  body{margin:0;padding:12mm 18mm;}
+*{
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body{
+  margin:0;
+  padding:0;
+}
+  .memo-page{
+  padding:12mm 18mm;
+}
+.support-page{
+  width:210mm;
+  height:297mm;
+  margin:0;
+  padding:0;
+  page-break-after:always;
+}
+.support-page img{
+  display:flex;
+  width:100%;
+  height:90%;
+  object-fit:contain;
 }
 </style></head><body>
+<div class="memo-page">
 <h1>MEMORANDUM</h1>
 <table>
   <tr><td class="lbl">DATE:</td><td>${dateStr}</td><td class="lbl">SALES DEAL NO:</td><td>${data.dealNo || ''}</td></tr>
@@ -450,14 +507,22 @@ td.lbl{font-weight:700;background:#eef1ff;white-space:nowrap;}
 <div class="ctx">${context}</div>
 
 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:24px;gap:20px;">
-  <div style="display:flex;flex-direction:column;gap:32px;">
-    <div>
+    <div style="display:flex;flex-direction:column;gap:32px;">
+    <div style="display:flex; justify-content:space-between; margin-top:40px;">
+
+    <div style="text-align:center;">
       <p style="margin-bottom:28px;">ขอแสดงความนับถือ</p>
-      <div style="display:flex;gap:60px;">
-        <div style="text-align:center;"><span class="sig-line"></span><p>ผู้แทนขาย</p></div>
-        <div style="text-align:center;"><span class="sig-line"></span><p>รับรองเอกสารโดย</p><p style="font-size:12pt;color:#555;">ผู้จัดการแผนกขาย 2</p></div>
-      </div>
+      <span class="sig-line"></span>
+      <p>ผู้แทนขาย</p>
     </div>
+
+    <div style="text-align:center;margin-left:10px;">
+      <p style="margin-bottom:28px;">รับรองเอกสารโดย</p>
+      <span class="sig-line"></span>
+      <p>ผู้จัดการแผนกขาย 2</p>
+    </div>
+
+  </div>
     <div>
       <p style="margin-bottom:28px;">รับรองเอกสารโดย</p>
       <div style="display:flex;gap:60px;">
@@ -492,7 +557,12 @@ td.lbl{font-weight:700;background:#eef1ff;white-space:nowrap;}
     </div>
   </div>
 </div>
+</div>
+<div class="support-page">
+${supportingDocs}
+</div>
 <script>window.onload=()=>{window.print();window.onafterprint=()=>window.close();}<\/script>
 </body></html>`);
+
   win.document.close();
 }
