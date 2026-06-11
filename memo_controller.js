@@ -431,25 +431,25 @@ function downloadPDF() {
 
   let supportingDocs = `
 
-      <img class="full-a4" src="${window.location.origin}/assets/Invoice.jpg">
+      <img class="full-a4" src="/assets/Invoice.jpg">
   `;
 
   if (state.scenario !== 'other_support') {
     supportingDocs += `
-      <img class="full-a4" src="${window.location.origin}/assets/branchDetail.jpg">
+      <img class="full-a4" src="/assets/branchDetail.jpg">
     `;
   }
 
   if (state.hasTTA) {
     supportingDocs += `
 
-      <img class="full-a4" src="${window.location.origin}/assets/TTA.jpg">
+      <img class="full-a4" src="/assets/TTA.jpg">
 
     `;
   } else {
     supportingDocs += `
 
-      <img class="full-a4"src="${window.location.origin}/assets/acknowledgement.jpg">
+      <img class="full-a4"src="/assets/acknowledgement.jpg">
 
     `;
   }
