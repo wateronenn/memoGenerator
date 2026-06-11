@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Memorandum Generator</title>
-<link rel="stylesheet" href="./memo.css">
+<link rel="stylesheet" href="./memo.css"></link>
 </head>
 <body>
 <div class="app">
-
+ 
   <div class="header">
     <div class="header-badge">Memo Generator</div>
     <h1>Memorandum Generator</h1>
     <p class="header-sub">สร้างหนังสือขออนุมัติอย่างเป็นทางการด้วย AI</p>
   </div>
-
+ 
   <div class="steps-bar">
     <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label">ประเภท</div></div>
     <div class="step-line"></div>
@@ -24,7 +24,7 @@
     <div class="step-line"></div>
     <div class="step" id="step4"><div class="step-num">4</div><div class="step-label">ดาวน์โหลด</div></div>
   </div>
-
+ 
   <!-- STEP 1 -->
   <div class="section active" id="sec1">
     <div class="card">
@@ -56,7 +56,7 @@
           <div class="scenario-desc">การสนับสนุนอื่นๆ</div>
         </div>
       </div>
-
+ 
       <div id="tta_section" style="display:none; margin-top: 24px;">
         <div class="divider" style="margin-top:0"></div>
         <div class="card-title" style="margin-bottom:12px;">มี TTAs หรือไม่?</div>
@@ -71,7 +71,7 @@
       <button class="btn btn-primary" onclick="goStep(2)" id="btn_next1" disabled>ถัดไป →</button>
     </div>
   </div>
-
+ 
   <!-- STEP 2 -->
   <div class="section" id="sec2">
     <div class="card">
@@ -96,7 +96,7 @@
       <button class="btn btn-primary" onclick="goStep(3)">สร้าง AI Draft →</button>
     </div>
   </div>
-
+ 
   <!-- STEP 3 -->
   <div class="section" id="sec3">
     <div class="ai-section">
@@ -128,13 +128,17 @@
       <div class="card-title">ตัวอย่าง Memo</div>
       <div class="preview-box" id="preview_box">กำลังโหลด...</div>
     </div>
+    <div class="card">
+      <div class="card-title">เอกสารที่เกี่ยวข้อง</div>
+      <div id="related_docs"></div>
+    </div>
     <div class="action-row">
       <button class="btn btn-secondary" onclick="goStep(2)">← ย้อนกลับ</button>
       <button class="btn btn-outline" onclick="generateAI()">🔄 สร้างใหม่</button>
       <button class="btn btn-primary" onclick="goStep(4)">ดาวน์โหลด →</button>
     </div>
   </div>
-
+ 
   <!-- STEP 4 -->
   <div class="section" id="sec4">
     <div class="download-section">
@@ -152,7 +156,17 @@
       </div>
     </div>
   </div>
-
+ 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <div class="lightbox-title" id="lightbox_title"></div>
+      <img id="lightbox_img" src="" alt="" style="display:none">
+      <div class="lightbox-paper" id="lightbox_paper" style="display:none"></div>
+    </div>
+  </div>
+ 
 </div>
 <script src="memo_controller.js"></script>
 </body></html>
